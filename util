@@ -19,8 +19,6 @@ docker exec -i -t jasper-nodeadmin /bin/bash
 docker logs jasper-nodeadmin
 
 
-
-
 docker run -d -it \
     --name mysql \
     --hostname="mysql.example.com" \
