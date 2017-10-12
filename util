@@ -2,31 +2,30 @@
 docker kill $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 
-docker network create --subnet=192.170.0.0/16 example-net
+#docker network create --subnet=192.170.0.0/16 example-net
 
-docker build -t godois/apache-superset:1.0 .
-
-docker run -d -it \
-    --name superset-nodeadmin \
-    --hostname="superset.example.com" \
-    --ip 192.170.1.1 \
-    --net example-net \
-    -p 8088:8088 \
-    -e NEWINSTANCE=true \    
-    godois/apache-superset:1.0
+docker build -t godois/jasperreports-server:1.0 .
 
 docker run -d -it \
-    --name superset-nodeadmin \
-    --hostname="superset.example.com" \
+    --name jasper-nodeadmin \
+    --hostname="jasper.example.com" \
     --ip 192.170.1.1 \
     --net example-net \
-    -v /tmp/superset:/home/superset \
-    -p 8088:8088 \
-    -e NEWINSTANCE=false \
-    godois/apache-superset:1.0
+    godois/jasperreports-server:1.0
 
-docker exec -i -t superset-nodeadmin /bin/bash
 
-docker logs superset-nodeadmin
+docker exec -i -t jasper-nodeadmin /bin/bash
 
-docker run --detach --name superset-new amancevice/superset
+docker logs jasper-nodeadmin
+
+
+
+
+docker run -d -it \
+    --name mysql \
+    --hostname="mysql.example.com" \
+    -v /tmp/mysql:/var/lib/mysql \
+    -e MYSQL_ROOT_PASSWORD=123 \
+    --ip 192.170.1.2 \
+    --net example-net \
+    mysql:latest
