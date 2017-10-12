@@ -40,7 +40,7 @@ RUN wget http://www-us.apache.org/dist/tomcat/tomcat-7/v7.0.82/bin/apache-tomcat
 
 #Download Jasper Reports distribution file, to extract .war file
 RUN wget https://sourceforge.net/projects/jasperserver/files/JasperServer/JasperReports%20Server%20Community%20Edition%206.4.0/TIB_js-jrs-cp_6.4.0_bin.zip -P /tmp/jasper
-RUN unzip TIB_js-jrs-cp_6.4.0_bin.zip -d /tmp/jasper/
+RUN unzip /tmp/jasper/TIB_js-jrs-cp_6.4.0_bin.zip -d .
 
 #ADD mysql_master.properties /tmp/jasper/jasperreports-server-cp-6.4.0-bin/buildomatic/default_master.properties
 
