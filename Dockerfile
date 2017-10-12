@@ -1,6 +1,6 @@
 ############################################################
-# Dockerfile to build ApacheSuperset Dashboards 
-# Based on baseImage
+# Dockerfile to build JasperReports Server 
+# Based on ubuntu trusty image
 ############################################################
 
 # Set the base image to ubuntu:trusty
@@ -9,8 +9,10 @@ FROM ubuntu:trusty
 # File Author / Maintainer
 MAINTAINER Marcio Godoi <souzagodoi@gmail.com>
 
+#Setting up user as root 
 USER root
 
+#Installing Ubuntu packages
 RUN apt-get update && \
     apt-get install -y \
     wget \
@@ -23,21 +25,27 @@ RUN apt-get update && \
 	unzip \
 	netcat \
 	software-properties-common \
-	telnet
+	telnet \
+	default-jdk
 
-RUN wget https://sourceforge.net/projects/jasperserver/files/JasperServer/JasperReports%20Server%20Community%20Edition%206.4.0/TIB_js-jrs-cp_6.4.0_bin.zip -P /tmp/jasper
-
-RUN unzip TIB_js-jrs-cp_6.4.0_bin.zip -d /tmp/jasper/
-
-#1.7.0_151
-RUN sudo apt-get install default-jdk
-
+#Setting the environment variables up used in this context
 ENV JAVA_HOME=/usr/lib/jvm/default-java
-
 ENV PATH=$PATH:/usr/lib/jvm/default-java/bin
 
+#Download Apache Tomcat 7 - latest release used by Jasper Reports server
 RUN wget http://www-us.apache.org/dist/tomcat/tomcat-7/v7.0.82/bin/apache-tomcat-7.0.82.tar.gz -P /tmp/tomcat && \
   tar -xvzf /tmp/tomcat/apache-tomcat-7.0.82.tar.gz -C /tmp/tomcat && \
   mv /tmp/tomcat/apache-tomcat-7.0.82 /usr/local/tomcat && \
   rm -rf /tmp/tomcat
 
+#Download Jasper Reports distribution file, to extract .war file
+RUN wget https://sourceforge.net/projects/jasperserver/files/JasperServer/JasperReports%20Server%20Community%20Edition%206.4.0/TIB_js-jrs-cp_6.4.0_bin.zip -P /tmp/jasper
+RUN unzip TIB_js-jrs-cp_6.4.0_bin.zip -d /tmp/jasper/
+
+#ADD mysql_master.properties /tmp/jasper/jasperreports-server-cp-6.4.0-bin/buildomatic/default_master.properties
+
+#WORKDIR /tmp/jasper/jasperreports-server-cp-6.4.0-bin/buildomatic/
+
+#RUN ./js-install-ce.sh
+
+#/usr/local/tomcat/bin/startup.sh
