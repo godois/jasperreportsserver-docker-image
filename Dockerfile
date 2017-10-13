@@ -31,7 +31,7 @@ RUN apt-get update && \
 #Setting the environment variables up used in this context
 ENV JAVA_HOME=/usr/lib/jvm/default-java
 ENV PATH=$PATH:/usr/lib/jvm/default-java/bin
-ENV ENTRYPOINT_FOLDER=/opt/jasperreports/
+ENV ENTRYPOINT_FOLDER=/tmp/jasper/jasperreports-server-cp-6.4.0-bin/buildomatic/
 
 #Download Apache Tomcat 7 - latest release used by Jasper Reports server
 RUN wget http://www-us.apache.org/dist/tomcat/tomcat-7/v7.0.82/bin/apache-tomcat-7.0.82.tar.gz -P /tmp/tomcat && \
@@ -41,7 +41,7 @@ RUN wget http://www-us.apache.org/dist/tomcat/tomcat-7/v7.0.82/bin/apache-tomcat
 
 #Download Jasper Reports distribution file, to extract .war file
 RUN wget https://sourceforge.net/projects/jasperserver/files/JasperServer/JasperReports%20Server%20Community%20Edition%206.4.0/TIB_js-jrs-cp_6.4.0_bin.zip -P /tmp/jasper
-RUN unzip /tmp/jasper/TIB_js-jrs-cp_6.4.0_bin.zip -d .
+RUN unzip /tmp/jasper/TIB_js-jrs-cp_6.4.0_bin.zip -d /tmp/jasper
 
 ADD mysql_master.properties /tmp/jasper/jasperreports-server-cp-6.4.0-bin/buildomatic/default_master.properties
 
@@ -52,7 +52,7 @@ ADD run.sh $ENTRYPOINT_FOLDER/entry-point.sh
 RUN chmod 755 $ENTRYPOINT_FOLDER/entry-point.sh
 
 # Expose the connection port to the host
-EXPOSE 8088
+EXPOSE 8080
 
 # Set the entrypoint file
-ENTRYPOINT ["/opt/jasperreports/entry-point.sh"]
+#ENTRYPOINT ["/tmp/jasper/jasperreports-server-cp-6.4.0-bin/buildomatic/entry-point.sh"]
