@@ -1,6 +1,5 @@
 
-docker kill $(docker ps -a -q)
-docker rm $(docker ps -a -q)
+docker kill $(docker ps -a -q) && docker rm $(docker ps -a -q)
 
 #docker network create --subnet=192.170.0.0/16 example-net
 
@@ -11,12 +10,17 @@ docker run -d -it \
     --hostname="jasper.example.com" \
     --ip 192.170.1.1 \
     --net example-net \
-    godois/jasperreports-server:1.0
+    -e NEWINSTANCE=true \
+    godois/jasperreports-server:1.0 && docker exec -i -t jasper-nodeadmin /bin/bash
 
 
-docker exec -i -t jasper-nodeadmin /bin/bash
-
-docker logs jasper-nodeadmin
+docker run -d -it \
+    --name jasper-nodeadmin \
+    --hostname="jasper.example.com" \
+    --ip 192.170.1.1 \
+    --net example-net \
+    -e NEWINSTANCE=true \
+    godois/jasperreports-server:1.0 && docker logs jasper-nodeadmin
 
 
 docker run -d -it \
@@ -27,3 +31,8 @@ docker run -d -it \
     --ip 192.170.1.2 \
     --net example-net \
     mysql:latest
+
+
+docker exec -i -t jasper-nodeadmin /bin/bash /usr/local/tomcat/bin/shutdown.sh
+docker exec -i -t jasper-nodeadmin /bin/bash /usr/local/tomcat/bin/startup.sh
+docker exec -i -t jasper-nodeadmin /bin/bash /tmp/jasper/jasperreports-server-cp-6.4.0-bin/buildomatic/js-install-ce.sh
